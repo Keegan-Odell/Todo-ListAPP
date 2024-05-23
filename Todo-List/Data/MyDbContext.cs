@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Todo_List.Models;
 
 namespace Todo_List.Data
 {
@@ -13,6 +12,6 @@ namespace Todo_List.Data
         // Define your DbSets (tables) here
         // DbSet represents a collection of a specific type of entity in the context
         // Make this a class that you want to use with a DB
-        public DbSet<UserClass> UserClasses { get; set; }
+        
     }
 }
