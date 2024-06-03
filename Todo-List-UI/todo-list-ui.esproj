@@ -8,10 +8,4 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="src\pages\" />
-    <Folder Include="src\redux\actions\" />
-    <Folder Include="src\redux\reducers\" />
-    <Folder Include="src\styles\" />
-  </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Todo_List.Data;
+using Todo_List.Repositories;
+using Todo_List.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +16,22 @@ builder.Configuration
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<TodoRepository>();
+builder.Services.AddScoped<TodoService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<TodoContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -27,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
