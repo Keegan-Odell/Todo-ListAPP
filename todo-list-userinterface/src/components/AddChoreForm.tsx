@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+// src/components/AddChoreForm.js
+import React, { useEffect } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { addNewTodo, selectTodos } from '../features/Todo/ToDoSlice';
 
 interface AddChoreProps {
   isVisible: boolean;
@@ -7,23 +10,27 @@ interface AddChoreProps {
 }
 
 interface IFormInput {
-  choreName: string;
+  todoName: string;
+  finished?: boolean;
 }
 
 const AddChoreForm: React.FC<AddChoreProps> = ({ isVisible, onClose }) => {
   const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const todos = useAppSelector(selectTodos);
+  const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<IFormInput>  = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    const todoData = { ...data, finished: false };
+    dispatch(addNewTodo(todoData)).unwrap();
     onClose();
     reset();
-  }
+  };
 
   useEffect(() => {
-    if(isVisible) {
-        reset();
+    if (isVisible) {
+      reset();
     }
-  }, [isVisible, reset])
+  }, [isVisible, reset]);
 
   if (!isVisible) {
     return null;
@@ -42,9 +49,9 @@ const AddChoreForm: React.FC<AddChoreProps> = ({ isVisible, onClose }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-4'>
             <input
-              {...register("choreName", { required: true })}
+              {...register('todoName', { required: true })}
               placeholder='Chore Name'
-              autoComplete="off"
+              autoComplete='off'
               className='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
             />
           </div>

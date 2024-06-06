@@ -1,38 +1,43 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { fetchTodos } from "./ToDoSlice";
-import AddChoreForm from "../../components/AddChoreForm";
+// src/features/Todo/ToDo.js
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { deleteTodo, fetchTodos, selectTodos, updateTodo } from './ToDoSlice';
+import AddChoreForm from '../../components/AddChoreForm';
 
 const ToDo = () => {
   const dispatch = useAppDispatch();
-  const todos = useAppSelector((state) => state.todos);
+  const todos = useAppSelector(selectTodos)
   const [isAddChoreVisible, setAddChoreVisible] = useState(false);
+  const todoStatus = useAppSelector(state => state.todos.status)
 
   useEffect(() => {
-    dispatch(fetchTodos());
-  }, [dispatch]);
+    if (todoStatus === 'idle') {
+      dispatch(fetchTodos());
+    }
+  }, [dispatch, todoStatus]);
 
   const handleFinishedClick = () => {
-    console.log("meow");
+    //start here
+    dispatch(updateTodo())
   };
 
   const handleDNFClick = () => {
-    console.log("bork");
+    console.log('bork');
   };
 
-  const handleDeleteClick = () => {
-    console.log("woof");
+  const handleDeleteClick = (id: number) => {
+    dispatch(deleteTodo(id))
   };
 
   const handleAddChoreClick = () => {
     setAddChoreVisible(!isAddChoreVisible);
   };
 
-  if (todos.status === "loading") {
+  if (todos.status === 'loading') {
     return <div className='text-center text-gray-500'>LOADING</div>;
   }
 
-  if (todos.status === "failed") {
+  if (todos.status === 'failed') {
     return <div className='text-center text-red-500'>Error: {todos.error}</div>;
   }
 
@@ -68,7 +73,7 @@ const ToDo = () => {
                     </button>
                     <button
                       className='bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md'
-                      onClick={handleDeleteClick}
+                      onClick={() => handleDeleteClick(todo.id)}
                     >
                       Delete
                     </button>
@@ -100,7 +105,7 @@ const ToDo = () => {
                     </button>
                     <button
                       className='bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md'
-                      onClick={handleDeleteClick}
+                      onClick={() => handleDeleteClick(todo.id)}
                     >
                       Delete
                     </button>
