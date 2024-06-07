@@ -4,6 +4,11 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { deleteTodo, fetchTodos, selectTodos, updateTodo } from './ToDoSlice';
 import AddChoreForm from '../../components/AddChoreForm';
 
+interface UpdateClass {
+  id: number,
+  finished: boolean
+}
+
 const ToDo = () => {
   const dispatch = useAppDispatch();
   const todos = useAppSelector(selectTodos)
@@ -16,13 +21,9 @@ const ToDo = () => {
     }
   }, [dispatch, todoStatus]);
 
-  const handleFinishedClick = () => {
+  const handleFinishedClick = (updateClass: UpdateClass) => {
     //start here
-    dispatch(updateTodo())
-  };
-
-  const handleDNFClick = () => {
-    console.log('bork');
+    dispatch(updateTodo(updateClass))
   };
 
   const handleDeleteClick = (id: number) => {
@@ -67,7 +68,7 @@ const ToDo = () => {
                   <div className='mt-2 flex space-x-2'>
                     <button
                       className='bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md'
-                      onClick={handleFinishedClick}
+                      onClick={() => handleFinishedClick({ id: todo.id, finished: todo.finished })}
                     >
                       Finished!
                     </button>
@@ -99,7 +100,7 @@ const ToDo = () => {
                   <div className='mt-2 flex space-x-2'>
                     <button
                       className='bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md'
-                      onClick={handleDNFClick}
+                      onClick={() => handleFinishedClick({ id: todo.id, finished: todo.finished })}
                     >
                       Whoops - Didn't finish
                     </button>
